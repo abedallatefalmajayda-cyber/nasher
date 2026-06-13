@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ناشر — محوّل المحتوى</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b12;
+    --surface: #0f1520;
+    --surface2: #161e2e;
+    --surface3: #1d2640;
+    --border: #232d42;
+    --border2: #2d3a55;
+    --text: #e2e8f8;
+    --text-muted: #7a8aaa;
+    --text-dim: #3d4d6a;
+    --accent: #4f8cff;
+    --accent2: #7eb3ff;
+    --accent-glow: rgba(79,140,255,0.12);
+
+    /* Platform colors */
+    --ig: #e1306c;
+    --fb: #1877f2;
+    --tw: #1da1f2;
+    --li: #0a66c2;
+    --tt: #010101;
+    --yt: #ff0000;
+    --wa: #25d366;
+    --tg: #229ed9;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+  .logo-name {
+    font-size: 18px; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent2), #c4b5fd);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .logo-sub { font-size: 10px; color: var(--text-muted); }
+
+  .lang-toggle {
+    display: flex; gap: 2px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 3px;
+  }
+  .lang-btn {
+    font-size: 11px; padding: 4px 10px; border-radius: 6px;
+    border: none; background: transparent; color: var(--text-muted);
+    cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all .2s;
+  }
+  .lang-btn.active { background: var(--accent); color: white; }
+
+  /* ── Main layout ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+
+  /* ── Input section ── */
+  .input-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .section-label {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+  }
+
+  textarea#mainInput {
+    width: 100%; min-height: 130px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px; line-height: 1.7;
+    resize: vertical; outline: none;
+    transition: border-color .2s;
+    direction: rtl;
+  }
+  textarea#mainInput:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  textarea#mainInput::placeholder { color: var(--text-dim); }
+
+  /* ── Tone selector ── */
+  .tone-row {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;
+  }
+  .tone-chip {
+    font-size: 11px; padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted);
+    cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all .2s;
+  }
+  .tone-chip.active {
+    border-color: var(--accent); background: var(--accent-glow); color: var(--accent2);
+  }
+
+  /* ── Platform grid ── */
+  .platforms-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .platforms-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .platforms-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  }
+
+  .platform-card {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 12px 6px; border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer; transition: all .2s;
+    position: relative;
+  }
+  .platform-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+  .platform-card.selected { border-color: var(--accent); background: var(--accent-glow); }
+  .platform-card.selected::after {
+    content: '✓';
+    position: absolute; top: 4px; left: 4px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent); color: white;
+    font-size: 9px; display: flex; align-items: center; justify-content: center;
+    font-family: sans-serif;
+  }
+
+  .p-icon { font-size: 22px; }
+  .p-name { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+  .platform-card.selected .p-name { color: var(--accent2); }
+
+  /* ── Generate button ── */
+  .generate-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #7c6ef5);
+    border: none; border-radius: 12px;
+    color: white; font-size: 15px; font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; transition: all .2s;
+    box-shadow: 0 4px 20px var(--accent-glow);
+    margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .generate-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(79,140,255,0.25); }
+  .generate-btn:disabled { opacity: .5; cursor: default; transform: none; }
+
+  /* ── Results ── */
+  .results-grid { display: flex; flex-direction: column; gap: 14px; }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: fadeUp .3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .result-platform {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600;
+  }
+
+  .p-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  .result-actions { display: flex; gap: 6px; }
+
+  .action-btn {
+    font-size: 11px; padding: 4px 10px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted);
+    cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all .2s;
+  }
+  .action-btn:hover { border-color: var(--accent); color: var(--accent2); }
+  .action-btn.copied { border-color: #34d399; color: #34d399; }
+
+  .result-body { padding: 16px; }
+
+  .result-text {
+    font-size: 13.5px; line-height: 1.8; color: var(--text);
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  .result-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px 12px;
+  }
+
+  .char-count { font-size: 10px; color: var(--text-dim); }
+  .char-count.warn { color: #fbbf24; }
+  .char-count.over { color: #ef4444; }
+
+  .hashtags {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px;
+  }
+  .hashtag {
+    font-size: 11px; padding: 2px 8px; border-radius: 10px;
+    background: var(--accent-glow); border: 1px solid var(--border2);
+    color: var(--accent2);
+  }
+
+  /* ── Loading ── */
+  .loading-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .spinner {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--border2);
+    border-top-color: var(--accent);
+    animation: spin .8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 13px; color: var(--text-muted); }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center; padding: 40px 20px;
+    color: var(--text-dim);
+  }
+  .empty-state .e-icon { font-size: 40px; margin-bottom: 10px; opacity: .5; }
+  .empty-state p { font-size: 13px; }
+
+  /* ── Select all ── */
+  .select-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .select-all-btn {
+    font-size: 11px; color: var(--accent2);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">📢</div>
+    <div>
+      <div class="logo-name" id="appName">ناشر</div>
+      <div class="logo-sub" id="appSub">محوّل المحتوى للسوشيال ميديا</div>
+    </div>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('ar')">عربي</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Input -->
+  <div class="input-section">
+    <div class="section-label">✏️ <span id="lbl-input">النص الأصلي</span></div>
+    <textarea id="mainInput" placeholder="اكتب فكرتك أو نصك هنا، وسأحوّله لمحتوى مناسب لكل منصة..."></textarea>
+
+    <div class="tone-row">
+      <span style="font-size:11px;color:var(--text-dim);margin-left:4px;" id="lbl-tone">النبرة:</span>
+      <button class="tone-chip active" data-tone="professional" onclick="selectTone(this)">🎯 احترافي</button>
+      <button class="tone-chip" data-tone="friendly" onclick="selectTone(this)">😊 ودّي</button>
+      <button class="tone-chip" data-tone="funny" onclick="selectTone(this)">😄 مرح</button>
+      <button class="tone-chip" data-tone="motivational" onclick="selectTone(this)">🔥 تحفيزي</button>
+      <button class="tone-chip" data-tone="educational" onclick="selectTone(this)">📚 تعليمي</button>
+    </div>
+  </div>
+
+  <!-- Platforms -->
+  <div class="platforms-section">
+    <div class="select-row">
+      <div class="section-label">📱 <span id="lbl-platforms">اختر المنصات</span></div>
+      <button class="select-all-btn" onclick="toggleAll()" id="selectAllBtn">تحديد الكل</button>
+    </div>
+    <div class="platforms-grid" id="platformsGrid"></div>
+  </div>
+
+  <!-- Generate -->
+  <button class="generate-btn" id="generateBtn" onclick="generate()">
+    <span>✨</span>
+    <span id="lbl-generate">توليد المحتوى</span>
+  </button>
+
+  <!-- Results -->
+  <div class="results-grid" id="results">
+    <div class="empty-state">
+      <div class="e-icon">📲</div>
+      <p id="lbl-empty">اختر المنصات واضغط "توليد المحتوى" للبدء</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Config ──
+const PLATFORMS = [
+  { id:'instagram', name:'Instagram', icon:'📸', color:'#e1306c', limit:2200 },
+  { id:'facebook',  name:'Facebook',  icon:'👍', color:'#1877f2', limit:63206 },
+  { id:'twitter',   name:'Twitter/X', icon:'🐦', color:'#1da1f2', limit:280 },
+  { id:'linkedin',  name:'LinkedIn',  icon:'💼', color:'#0a66c2', limit:3000 },
+  { id:'tiktok',    name:'TikTok',    icon:'🎵', color:'#ff2d55', limit:2200 },
+  { id:'youtube',   name:'YouTube',   icon:'▶️', color:'#ff0000', limit:5000 },
+  { id:'whatsapp',  name:'WhatsApp',  icon:'💬', color:'#25d366', limit:65536 },
+  { id:'telegram',  name:'Telegram',  icon:'✈️', color:'#229ed9', limit:4096 },
+];
+
+const TONES = {
+  professional: { ar:'احترافي وموثوق', en:'professional and authoritative' },
+  friendly:     { ar:'ودّي وقريب من القارئ', en:'friendly and approachable' },
+  funny:        { ar:'مرح وخفيف الظل', en:'funny and light-hearted' },
+  motivational: { ar:'تحفيزي وملهم', en:'motivational and inspiring' },
+  educational:  { ar:'تعليمي وشارح', en:'educational and informative' },
+};
+
+let lang = 'ar';
+let selectedTone = 'professional';
+let selectedPlatforms = new Set();
+
+const I18N = {
+  ar: {
+    appName: 'ناشر', appSub: 'محوّل المحتوى للسوشيال ميديا',
+    lblInput: 'النص الأصلي', lblTone: 'النبرة:', lblPlatforms: 'اختر المنصات',
+    lblGenerate: 'توليد المحتوى', lblEmpty: 'اختر المنصات واضغط "توليد المحتوى" للبدء',
+    selectAll: 'تحديد الكل', deselectAll: 'إلغاء الكل',
+    copy: 'نسخ', copied: '✓ تم',
+    loading: 'جارٍ التوليد...',
+    placeholder: 'اكتب فكرتك أو نصك هنا، وسأحوّله لمحتوى مناسب لكل منصة...',
+    tones: { professional:'🎯 احترافي', friendly:'😊 ودّي', funny:'😄 مرح', motivational:'🔥 تحفيزي', educational:'📚 تعليمي' },
+    chars: 'حرف', limit: 'الحد',
+  },
+  en: {
+    appName: 'Nashir', appSub: 'Social Media Content Converter',
+    lblInput: 'Original Text', lblTone: 'Tone:', lblPlatforms: 'Choose Platforms',
+    lblGenerate: 'Generate Content', lblEmpty: 'Select platforms and click "Generate Content" to start',
+    selectAll: 'Select All', deselectAll: 'Deselect All',
+    copy: 'Copy', copied: '✓ Done',
+    loading: 'Generating...',
+    placeholder: 'Write your idea or text here, and I\'ll convert it for each platform...',
+    tones: { professional:'🎯 Professional', friendly:'😊 Friendly', funny:'😄 Funny', motivational:'🔥 Motivational', educational:'📚 Educational' },
+    chars: 'chars', limit: 'limit',
+  }
+};
+
+// ── Init ──
+function initPlatforms() {
+  const grid = document.getElementById('platformsGrid');
+  grid.innerHTML = '';
+  PLATFORMS.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'platform-card' + (selectedPlatforms.has(p.id) ? ' selected' : '');
+    card.dataset.id = p.id;
+    card.innerHTML = `<span class="p-icon">${p.icon}</span><span class="p-name">${p.name}</span>`;
+    card.onclick = () => togglePlatform(p.id, card);
+    grid.appendChild(card);
+  });
+}
+
+function togglePlatform(id, card) {
+  if (selectedPlatforms.has(id)) {
+    selectedPlatforms.delete(id);
+    card.classList.remove('selected');
+  } else {
+    selectedPlatforms.add(id);
+    card.classList.add('selected');
+  }
+}
+
+function toggleAll() {
+  const t = I18N[lang];
+  if (selectedPlatforms.size === PLATFORMS.length) {
+    selectedPlatforms.clear();
+    document.getElementById('selectAllBtn').textContent = t.selectAll;
+  } else {
+    PLATFORMS.forEach(p => selectedPlatforms.add(p.id));
+    document.getElementById('selectAllBtn').textContent = t.deselectAll;
+  }
+  initPlatforms();
+}
+
+function selectTone(el) {
+  document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedTone = el.dataset.tone;
+}
+
+// ── Lang ──
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === (l==='ar'?'عربي':'EN')));
+
+  const t = I18N[l];
+  document.getElementById('appName').textContent = t.appName;
+  document.getElementById('appSub').textContent = t.appSub;
+  document.getElementById('lbl-input').textContent = t.lblInput;
+  document.getElementById('lbl-tone').textContent = t.lblTone;
+  document.getElementById('lbl-platforms').textContent = t.lblPlatforms;
+  document.getElementById('lbl-generate').textContent = t.lblGenerate;
+  document.getElementById('lbl-empty').textContent = t.lblEmpty;
+  document.getElementById('selectAllBtn').textContent = t.selectAll;
+  document.getElementById('mainInput').placeholder = t.placeholder;
+
+  // Update tone chips
+  document.querySelectorAll('.tone-chip').forEach(c => {
+    c.textContent = t.tones[c.dataset.tone];
+  });
+}
+
+// ── Generate ──
+async function generate() {
+  const text = document.getElementById('mainInput').value.trim();
+  const btn = document.getElementById('generateBtn');
+  const t = I18N[lang];
+
+  if (!text) {
+    document.getElementById('mainInput').focus();
+    return;
+  }
+  if (selectedPlatforms.size === 0) {
+    alert(lang === 'ar' ? 'اختر منصة واحدة على الأقل' : 'Select at least one platform');
+    return;
+  }
+
+  btn.disabled = true;
+  const results = document.getElementById('results');
+  results.innerHTML = `
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <span class="loading-text">${t.loading}</span>
+    </div>`;
+
+  const platformList = PLATFORMS.filter(p => selectedPlatforms.has(p.id));
+  const toneDesc = TONES[selectedTone][lang];
+
+  const systemPrompt = lang === 'ar'
+    ? `أنت خبير محتوى رقمي متخصص في السوشيال ميديا. مهمتك تحويل النص المُعطى لمنشورات مُحسَّنة لكل منصة.
+قواعد مهمة:
+- احترم حدود الأحرف لكل منصة
+- أضف هاشتاقات مناسبة عند الحاجة
+- استخدم إيموجي بشكل ذكي ومناسب
+- النبرة المطلوبة: ${toneDesc}
+- أجب بـ JSON فقط بالشكل التالي بدون أي نص إضافي:
+{"results":[{"platform":"اسم المنصة","content":"نص المنشور","hashtags":["tag1","tag2"]}]}`
+    : `You are a digital content expert specialized in social media. Your task is to convert the given text into optimized posts for each platform.
+Rules:
+- Respect character limits for each platform
+- Add appropriate hashtags when needed
+- Use emojis smartly and appropriately
+- Required tone: ${toneDesc}
+- Reply with JSON only in this format without any extra text:
+{"results":[{"platform":"platform name","content":"post text","hashtags":["tag1","tag2"]}]}`;
+
+  const userMsg = lang === 'ar'
+    ? `حوّل هذا النص للمنصات التالية: ${platformList.map(p=>p.name).join('، ')}\n\nالنص:\n${text}`
+    : `Convert this text for the following platforms: ${platformList.map(p=>p.name).join(', ')}\n\nText:\n${text}`;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userMsg }]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data?.reply || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    renderResults(parsed.results, platformList);
+  } catch(e) {
+    results.innerHTML = `<div class="loading-card" style="border-color:rgba(239,68,68,.3)">
+      <span style="font-size:20px">⚠️</span>
+      <span class="loading-text" style="color:#fca5a5">${lang==='ar'?'حدث خطأ، حاول مجدداً':'An error occurred, please try again'}</span>
+    </div>`;
+  }
+
+  btn.disabled = false;
+}
+
+function renderResults(items, platformList) {
+  const results = document.getElementById('results');
+  const t = I18N[lang];
+
+  if (!items || items.length === 0) {
+    results.innerHTML = `<div class="empty-state"><div class="e-icon">😕</div><p>${t.lblEmpty}</p></div>`;
+    return;
+  }
+
+  results.innerHTML = items.map((item, i) => {
+    const pInfo = platformList.find(p => p.name.toLowerCase() === item.platform.toLowerCase()) || platformList[i] || platformList[0];
+    const charCount = item.content.length;
+    const limit = pInfo?.limit || 9999;
+    const countClass = charCount > limit ? 'over' : charCount > limit * 0.9 ? 'warn' : '';
+    const hashtags = item.hashtags?.length ? `<div class="hashtags">${item.hashtags.map(h=>`<span class="hashtag">#${h.replace('#','')}</span>`).join('')}</div>` : '';
+
+    return `
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-platform">
+            <div class="p-dot" style="background:${pInfo?.color||'#666'}"></div>
+            <span>${pInfo?.icon||'📱'} ${item.platform}</span>
+          </div>
+          <div class="result-actions">
+            <button class="action-btn" onclick="copyText(this, \`${item.content.replace(/`/g,'\\`')}\`)">
+              ${t.copy}
+            </button>
+          </div>
+        </div>
+        <div class="result-body">
+          <div class="result-text">${escHtml(item.content)}</div>
+          ${hashtags}
+        </div>
+        <div class="result-footer">
+          <span class="char-count ${countClass}">${charCount} ${t.chars} / ${limit} ${t.limit}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const t = I18N[lang];
+    const orig = btn.textContent;
+    btn.textContent = t.copied;
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Init ──
+initPlatforms();
+</script>
+</body>
+</html>
